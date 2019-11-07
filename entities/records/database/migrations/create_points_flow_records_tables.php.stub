@@ -1,0 +1,33 @@
+<?php
+
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Migrations\Migration;
+
+/**
+ * Class CreatePointsFlowRecordsTables.
+ */
+class CreatePointsFlowRecordsTables extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up()
+    {
+        Schema::create('points_flow_records', function (Blueprint $table) {
+            $table->increments('id');
+            $table->integer('user_id')->unsigned()->default(0)->index();
+            $table->integer('action_id')->unsigned()->default(0)->index();
+            $table->integer('points')->default(0);
+            $table->timestamps();
+            $table->softDeletes();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down()
+    {
+        Schema::dropIfExists('points_flow_records');
+    }
+}

@@ -1,0 +1,33 @@
+{
+  "name": "inetstudio/points-flow-package",
+  "description": "Package for points flow",
+  "homepage": "https://github.com/inetstudio/points-flow-package",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Konstantin Bukin",
+      "email": "bukin@inetstudio.ru"
+    }
+  ],
+  "require": {
+    "inetstudio/admin-panel": "^6.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "InetStudio\\PointsFlowPackage\\": "package/src",
+      "InetStudio\\PointsFlowPackage\\Actions\\": "entities/actions/src",
+      "InetStudio\\PointsFlowPackage\\Records\\": "entities/records/src"
+    }
+  },
+  "extra": {
+    "laravel": {
+      "providers": [
+        "InetStudio\\PointsFlowPackage\\Providers\\ServiceProvider",
+        "InetStudio\\PointsFlowPackage\\Actions\\Providers\\BindingsServiceProvider",
+        "InetStudio\\PointsFlowPackage\\Actions\\Providers\\ServiceProvider",
+        "InetStudio\\PointsFlowPackage\\Records\\Providers\\BindingsServiceProvider",
+        "InetStudio\\PointsFlowPackage\\Records\\Providers\\ServiceProvider"
+      ]
+    }
+  }
+}
