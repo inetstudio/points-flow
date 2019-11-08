@@ -1,7 +1,7 @@
 {
-  "name": "inetstudio/points-flow-package",
+  "name": "inetstudio/points-flow",
   "description": "Package for points flow",
-  "homepage": "https://github.com/inetstudio/points-flow-package",
+  "homepage": "https://github.com/inetstudio/points-flow",
   "license": "MIT",
   "authors": [
     {
