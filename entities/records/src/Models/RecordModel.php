@@ -7,9 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use InetStudio\ACL\Users\Models\Traits\HasUser;
 use InetStudio\PointsFlowPackage\Actions\Models\Traits\Action;
-use InetStudio\Classifiers\Models\Traits\HasClassifiers;
-use InetStudio\PointsFlowPackage\Records\Contracts\Models\RecordModelContract;
 use InetStudio\AdminPanel\Base\Models\Traits\Scopes\BuildQueryScopeTrait;
+use InetStudio\PointsFlowPackage\Records\Contracts\Models\RecordModelContract;
 
 /**
  * Class RecordModel.
@@ -18,7 +17,6 @@ class RecordModel extends Model implements RecordModelContract
 {
     use Auditable;
     use SoftDeletes;
-    use HasClassifiers;
     use BuildQueryScopeTrait;
 
     /**

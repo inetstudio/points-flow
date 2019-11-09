@@ -6,10 +6,9 @@ use OwenIt\Auditing\Auditable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use InetStudio\Classifiers\Models\Traits\HasClassifiers;
 use Illuminate\Contracts\Container\BindingResolutionException;
-use InetStudio\PointsFlowPackage\Actions\Contracts\Models\ActionModelContract;
 use InetStudio\AdminPanel\Base\Models\Traits\Scopes\BuildQueryScopeTrait;
+use InetStudio\PointsFlowPackage\Actions\Contracts\Models\ActionModelContract;
 
 /**
  * Class ActionModel.
@@ -18,7 +17,6 @@ class ActionModel extends Model implements ActionModelContract
 {
     use Auditable;
     use SoftDeletes;
-    use HasClassifiers;
     use BuildQueryScopeTrait;
 
     /**
