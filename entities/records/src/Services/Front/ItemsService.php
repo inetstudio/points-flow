@@ -34,10 +34,10 @@ class ItemsService extends BaseService implements ItemsServiceContract
      */
     public function recordAction(int $userId, string $actionAlias): ?RecordModelContract
     {
-        $usersRepository = app()->make('InetStudio\ACL\Users\Contracts\Repositories\UsersRepositoryContract');
+        $usersService = app()->make('InetStudio\ACL\Users\Contracts\Services\Front\ItemsServiceContract');
         $actionsService = app()->make('InetStudio\PointsFlowPackage\Actions\Contracts\Services\Front\ItemsServiceContract');
 
-        $user = $usersRepository->getItemById($userId);
+        $user = $usersService->getItemById($userId);
         $action = $actionsService->getModel()->where('alias', '=', $actionAlias)->first();
 
         if (! $user['id'] || ! $action) {
