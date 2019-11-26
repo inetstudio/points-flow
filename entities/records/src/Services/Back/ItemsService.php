@@ -73,7 +73,8 @@ class ItemsService extends BaseService implements ItemsServiceContract
                     ['user_id', '=', $userId ?? 0],
                     ['action_id', '=', $action['id'] ?? 0],
                 ]
-            );
+            )
+            ->get();
 
         $record = $records->last();
 

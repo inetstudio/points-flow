@@ -79,4 +79,42 @@ class ItemsService extends BaseService implements ItemsServiceContract
 
         return $record;
     }
+
+    /**
+     * Проверяем, что есть записи о начислении баллов.
+     *
+     * @param  int  $userId
+     * @param  string  $actionAlias
+     *
+     * @return bool
+     *
+     * @throws BindingResolutionException
+     */
+    public function hasActionRecords(int $userId, string $actionAlias): bool
+    {
+        $usersService = app()->make('InetStudio\ACL\Users\Contracts\Services\Front\ItemsServiceContract');
+        $actionsService = app()->make('InetStudio\PointsFlowPackage\Actions\Contracts\Services\Front\ItemsServiceContract');
+
+        $user = $usersService->getItemById($userId);
+        $action = $actionsService->getModel()->where('alias', '=', $actionAlias)->first();
+
+        if (! $user['id'] || ! $action) {
+            return false;
+        }
+
+        $recordsCount = $this->getModel()
+            ->where(
+                [
+                    ['user_id', '=', $user['id']],
+                    ['action_id', '=', $action['id']],
+                ]
+            )
+            ->count();
+
+        if ($recordsCount > 0) {
+            return true;
+        }
+
+        return false;
+    }
 }
