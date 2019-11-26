@@ -4,12 +4,12 @@ namespace InetStudio\PointsFlowPackage\Records\Events;
 
 use Illuminate\Queue\SerializesModels;
 use InetStudio\ACL\Users\Contracts\Models\UserModelContract;
-use InetStudio\PointsFlowPackage\Records\Contracts\Events\RecordActionEventContract;
+use InetStudio\PointsFlowPackage\Records\Contracts\Events\RemoveRecordEventContract;
 
 /**
- * Class RecordActionEvent.
+ * Class RemoveRecordEvent.
  */
-class RecordActionEvent implements RecordActionEventContract
+class RemoveRecordEvent implements RemoveRecordEventContract
 {
     use SerializesModels;
 

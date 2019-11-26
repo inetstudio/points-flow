@@ -52,4 +52,66 @@ class ItemsService extends BaseService implements ItemsServiceContract
 
         return $item;
     }
+
+
+    /**
+     * Удаляем последнюю запись по действию.
+     *
+     * @param  int  $userId
+     * @param  string  $actionAlias
+     *
+     * @throws BindingResolutionException
+     */
+    public function removeLastRecord(int $userId, string $actionAlias): void
+    {
+        $actionsService = app()->make('InetStudio\PointsFlowPackage\Actions\Contracts\Services\Front\ItemsServiceContract');
+        $action = $actionsService->getModel()->where('alias', '=', $actionAlias)->first();
+
+        $records = $this->getModel()
+            ->where(
+                [
+                    ['user_id', '=', $userId ?? 0],
+                    ['action_id', '=', $action['id'] ?? 0],
+                ]
+            );
+
+        $record = $records->last();
+
+        $this->destroy($record['id']);
+    }
+
+    /**
+     * Удаляем модель.
+     *
+     * @param  mixed  $id
+     *
+     * @return bool|null
+     *
+     * @throws BindingResolutionException
+     */
+    public function destroy($id): ?bool
+    {
+        $record = $this->getItemById($id);
+
+        $result = null;
+
+        if ($record) {
+            $usersService = app()->make('InetStudio\ACL\Users\Contracts\Services\Front\ItemsServiceContract');
+            $user = $usersService->getItemById($record['user_id']);
+            $points = $record['points'];
+
+            $result = $this->model::destroy($id);
+
+            if ($result) {
+                event(
+                    app()->make(
+                        'InetStudio\PointsFlowPackage\Records\Contracts\Events\RemoveRecordEventContract',
+                        compact('user', 'points')
+                    )
+                );
+            }
+        }
+
+        return $result;
+    }
 }
