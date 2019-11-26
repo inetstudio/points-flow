@@ -15,6 +15,7 @@ class BindingsServiceProvider extends BaseServiceProvider implements DeferrableP
      */
     public $bindings = [
         'InetStudio\PointsFlowPackage\Records\Contracts\Events\Back\ModifyItemEventContract' => 'InetStudio\PointsFlowPackage\Records\Events\Back\ModifyItemEvent',
+        'InetStudio\PointsFlowPackage\Records\Contracts\Events\RecordActionEventContract' => 'InetStudio\PointsFlowPackage\Records\Events\RecordActionEvent',
         'InetStudio\PointsFlowPackage\Records\Contracts\Http\Controllers\Back\ResourceControllerContract' => 'InetStudio\PointsFlowPackage\Records\Http\Controllers\Back\ResourceController',
         'InetStudio\PointsFlowPackage\Records\Contracts\Http\Controllers\Back\DataControllerContract' => 'InetStudio\PointsFlowPackage\Records\Http\Controllers\Back\DataController',
         'InetStudio\PointsFlowPackage\Records\Contracts\Http\Requests\Back\SaveItemRequestContract' => 'InetStudio\PointsFlowPackage\Records\Http\Requests\Back\SaveItemRequest',

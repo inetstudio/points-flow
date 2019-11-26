@@ -16,7 +16,7 @@ class RecordActionListener implements RecordActionListenerContract
     protected $itemsService;
 
     /**
-     * SaveResponse constructor.
+     * RecordActionListener constructor.
      *
      * @param  ItemsServiceContract  $itemsService
      */

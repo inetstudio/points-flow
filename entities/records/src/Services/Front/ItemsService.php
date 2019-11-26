@@ -67,6 +67,16 @@ class ItemsService extends BaseService implements ItemsServiceContract
 
         $record = $this->saveModel($data, 0);
 
+        event(
+            app()->make(
+                'InetStudio\PointsFlowPackage\Records\Contracts\Events\RecordActionEventContract',
+                [
+                    'user' => $user,
+                    'points' => $action['points']
+                ]
+            )
+        );
+
         return $record;
     }
 }
