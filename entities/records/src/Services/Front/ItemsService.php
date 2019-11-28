@@ -2,6 +2,7 @@
 
 namespace InetStudio\PointsFlowPackage\Records\Services\Front;
 
+use Illuminate\Support\Collection;
 use InetStudio\AdminPanel\Base\Services\BaseService;
 use Illuminate\Contracts\Container\BindingResolutionException;
 use InetStudio\PointsFlowPackage\Records\Contracts\Models\RecordModelContract;
@@ -27,12 +28,14 @@ class ItemsService extends BaseService implements ItemsServiceContract
      *
      * @param  int  $userId
      * @param  string  $actionAlias
+     * @param  int  $points
+     * @param  bool  $update
      *
      * @return RecordModelContract|null
      *
      * @throws BindingResolutionException
      */
-    public function recordAction(int $userId, string $actionAlias): ?RecordModelContract
+    public function recordAction(int $userId, string $actionAlias, int $points = 0, bool $update = false): ?RecordModelContract
     {
         $usersService = app()->make('InetStudio\ACL\Users\Contracts\Services\Front\ItemsServiceContract');
         $actionsService = app()->make('InetStudio\PointsFlowPackage\Actions\Contracts\Services\Front\ItemsServiceContract');
@@ -44,17 +47,10 @@ class ItemsService extends BaseService implements ItemsServiceContract
             return null;
         }
 
-        if ($action['single']) {
-            $recordsCount = $this->getModel()
-                ->where(
-                    [
-                        ['user_id', '=', $user['id']],
-                        ['action_id', '=', $action['id']],
-                    ]
-                )
-                ->count();
+        $records = $this->getActionRecords($userId, $actionAlias);
 
-            if ($recordsCount > 0) {
+        if ($action['single'] && ! $update) {
+            if ($records->count() > 0) {
                 return null;
             }
         }
@@ -62,22 +58,59 @@ class ItemsService extends BaseService implements ItemsServiceContract
         $data = [
             'user_id' => $user['id'],
             'action_id' => $action['id'],
-            'points' => $action['points'],
+            'points' => ($points) ? $points : $action['points'],
         ];
 
-        $record = $this->saveModel($data, 0);
+        if ($action['single'] && $update) {
+            $record = $records->last();
+            $record = $this->saveModel($data, $record['id']);
+        } else {
+            $record = $this->saveModel($data, 0);
+        }
 
         event(
             app()->make(
                 'InetStudio\PointsFlowPackage\Records\Contracts\Events\RecordActionEventContract',
                 [
                     'user' => $user,
-                    'points' => $action['points']
+                    'points' => $record['points']
                 ]
             )
         );
 
         return $record;
+    }
+
+    /**
+     * Получаем записи по действию и пользователю.
+     *
+     * @param  int  $userId
+     * @param  string  $actionAlias
+     *
+     * @return Collection
+     *
+     * @throws BindingResolutionException
+     */
+    public function getActionRecords(int $userId, string $actionAlias): Collection
+    {
+        $usersService = app()->make('InetStudio\ACL\Users\Contracts\Services\Front\ItemsServiceContract');
+        $actionsService = app()->make('InetStudio\PointsFlowPackage\Actions\Contracts\Services\Front\ItemsServiceContract');
+
+        $user = $usersService->getItemById($userId);
+        $action = $actionsService->getModel()->where('alias', '=', $actionAlias)->first();
+
+        if (! $user['id'] || ! $action) {
+            return collect([]);
+        }
+
+        return $this->getModel()
+            ->where(
+                [
+                    ['user_id', '=', $user['id']],
+                    ['action_id', '=', $action['id']],
+                ]
+            )
+            ->get();
     }
 
     /**
@@ -92,26 +125,9 @@ class ItemsService extends BaseService implements ItemsServiceContract
      */
     public function hasActionRecords(int $userId, string $actionAlias): bool
     {
-        $usersService = app()->make('InetStudio\ACL\Users\Contracts\Services\Front\ItemsServiceContract');
-        $actionsService = app()->make('InetStudio\PointsFlowPackage\Actions\Contracts\Services\Front\ItemsServiceContract');
+        $records = $this->getActionRecords($userId, $actionAlias);
 
-        $user = $usersService->getItemById($userId);
-        $action = $actionsService->getModel()->where('alias', '=', $actionAlias)->first();
-
-        if (! $user['id'] || ! $action) {
-            return false;
-        }
-
-        $recordsCount = $this->getModel()
-            ->where(
-                [
-                    ['user_id', '=', $user['id']],
-                    ['action_id', '=', $action['id']],
-                ]
-            )
-            ->count();
-
-        if ($recordsCount > 0) {
+        if ($records->count() > 0) {
             return true;
         }
 
