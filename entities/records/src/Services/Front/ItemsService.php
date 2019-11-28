@@ -63,10 +63,11 @@ class ItemsService extends BaseService implements ItemsServiceContract
 
         if ($action['single'] && $update) {
             $record = $records->last();
-            $record = $this->saveModel($data, $record['id']);
-        } else {
-            $record = $this->saveModel($data, 0);
+
+            $recordId = $record['id'] ?? 0;
         }
+
+        $record = $this->saveModel($data, $recordId ?? 0);
 
         event(
             app()->make(
