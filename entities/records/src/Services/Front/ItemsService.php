@@ -137,4 +137,31 @@ class ItemsService extends BaseService implements ItemsServiceContract
 
         return false;
     }
+
+    /**
+     * Получаем записи по действию и пользователю.
+     *
+     * @param  int  $userId
+     *
+     * @return Collection
+     *
+     * @throws BindingResolutionException
+     */
+    public function getUserRecords(int $userId): Collection
+    {
+        $usersService = app()->make('InetStudio\ACL\Users\Contracts\Services\Front\ItemsServiceContract');
+        $user = $usersService->getItemById($userId);
+
+        if (! $user['id']) {
+            return collect([]);
+        }
+
+        return $this->getModel()
+            ->where(
+                [
+                    ['user_id', '=', $user['id']],
+                ]
+            )
+            ->get();
+    }
 }
