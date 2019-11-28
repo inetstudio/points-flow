@@ -65,6 +65,7 @@ class ItemsService extends BaseService implements ItemsServiceContract
             $record = $records->last();
 
             $recordId = $record['id'] ?? 0;
+            $pointsDifference = ($record) ? $points - $record['points'] : 0;
         }
 
         $record = $this->saveModel($data, $recordId ?? 0);
@@ -74,7 +75,9 @@ class ItemsService extends BaseService implements ItemsServiceContract
                 'InetStudio\PointsFlowPackage\Records\Contracts\Events\RecordActionEventContract',
                 [
                     'user' => $user,
-                    'points' => $record['points']
+                    'points' => $record['points'],
+                    'update' => $update,
+                    'pointsDifference' => $pointsDifference ?? 0,
                 ]
             )
         );

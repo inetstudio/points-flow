@@ -24,14 +24,28 @@ class RecordActionEvent implements RecordActionEventContract
     public $points;
 
     /**
-     * ModifyItemEvent constructor.
+     * @var bool
+     */
+    public $update;
+
+    /**
+     * @var int
+     */
+    public $pointsDifference;
+
+    /**
+     * RecordActionEvent constructor.
      *
      * @param  UserModelContract  $user
      * @param  int  $points
+     * @param  bool  $update
+     * @param  int  $pointsDifference
      */
-    public function __construct(UserModelContract $user, int $points)
+    public function __construct(UserModelContract $user, int $points, bool $update = false, int $pointsDifference = 0)
     {
         $this->user = $user;
         $this->points = $points;
+        $this->update = $update;
+        $this->pointsDifference = $pointsDifference;
     }
 }
