@@ -62,7 +62,7 @@ class ItemsService extends BaseService implements ItemsServiceContract
             'points' => ($points) ? $points : $action['points'],
         ];
 
-        if (! empty($additional)) {
+        if (! empty($additionalInfo)) {
             $data['additional_info'] = $additionalInfo;
         }
 
