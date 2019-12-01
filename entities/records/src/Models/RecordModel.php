@@ -6,6 +6,7 @@ use OwenIt\Auditing\Auditable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use InetStudio\ACL\Users\Models\Traits\HasUser;
+use InetStudio\AdminPanel\Models\Traits\HasJSONColumns;
 use InetStudio\PointsFlowPackage\Actions\Models\Traits\Action;
 use InetStudio\AdminPanel\Base\Models\Traits\Scopes\BuildQueryScopeTrait;
 use InetStudio\PointsFlowPackage\Records\Contracts\Models\RecordModelContract;
@@ -17,6 +18,7 @@ class RecordModel extends Model implements RecordModelContract
 {
     use Auditable;
     use SoftDeletes;
+    use HasJSONColumns;
     use BuildQueryScopeTrait;
 
     /**
@@ -47,6 +49,7 @@ class RecordModel extends Model implements RecordModelContract
         'user_id',
         'action_id',
         'points',
+        'additional_info'
     ];
 
     /**
@@ -61,6 +64,15 @@ class RecordModel extends Model implements RecordModelContract
     ];
 
     /**
+     * Атрибуты, которые должны быть преобразованы к базовым типам.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'additional_info' => 'array',
+    ];
+
+    /**
      * Загрузка модели.
      */
     protected static function boot()
@@ -72,6 +84,7 @@ class RecordModel extends Model implements RecordModelContract
             'user_id',
             'action_id',
             'points',
+            'additional_info',
         ];
 
         self::$buildQueryScopeDefaults['relations'] = [
@@ -112,6 +125,16 @@ class RecordModel extends Model implements RecordModelContract
     public function setPointsAttribute($value): void
     {
         $this->attributes['points'] = (int) trim(strip_tags($value));
+    }
+
+    /**
+     * Сеттер атрибута additional_info.
+     *
+     * @param $value
+     */
+    public function setAdditionalInfoAttribute($value)
+    {
+        $this->attributes['additional_info'] = json_encode((array) $value);
     }
 
     /**

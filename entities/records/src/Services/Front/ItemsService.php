@@ -28,6 +28,7 @@ class ItemsService extends BaseService implements ItemsServiceContract
      *
      * @param  int  $userId
      * @param  string  $actionAlias
+     * @param  array  $additionalInfo
      * @param  int  $points
      * @param  bool  $update
      *
@@ -35,7 +36,7 @@ class ItemsService extends BaseService implements ItemsServiceContract
      *
      * @throws BindingResolutionException
      */
-    public function recordAction(int $userId, string $actionAlias, int $points = 0, bool $update = false): ?RecordModelContract
+    public function recordAction(int $userId, string $actionAlias, array $additionalInfo = [], int $points = 0, bool $update = false): ?RecordModelContract
     {
         $usersService = app()->make('InetStudio\ACL\Users\Contracts\Services\Front\ItemsServiceContract');
         $actionsService = app()->make('InetStudio\PointsFlowPackage\Actions\Contracts\Services\Front\ItemsServiceContract');
@@ -60,6 +61,10 @@ class ItemsService extends BaseService implements ItemsServiceContract
             'action_id' => $action['id'],
             'points' => ($points) ? $points : $action['points'],
         ];
+
+        if (! empty($additional)) {
+            $data['additional_info'] = $additionalInfo;
+        }
 
         if ($action['single'] && $update) {
             $record = $records->last();
