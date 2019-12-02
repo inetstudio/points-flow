@@ -145,6 +145,31 @@ class ItemsService extends BaseService implements ItemsServiceContract
     }
 
     /**
+     * Проверяем, что достигнут лимит баллов.
+     *
+     * @param  int  $userId
+     * @param  string  $actionAlias
+     *
+     * @return bool
+     *
+     * @throws BindingResolutionException
+     */
+    public function hasActionLimitReached(int $userId, string $actionAlias): bool
+    {
+        $actionsService = app()->make('InetStudio\PointsFlowPackage\Actions\Contracts\Services\Front\ItemsServiceContract');
+        $action = $actionsService->getModel()->where('alias', '=', $actionAlias)->first();
+
+        $records = $this->getActionRecords($userId, $actionAlias);
+        $pointsSum = $records->sum('points');
+
+        if ($action['points_limit'] > 0 && $pointsSum >= $action['points_limit']) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
      * Получаем записи по действию и пользователю.
      *
      * @param  int  $userId
