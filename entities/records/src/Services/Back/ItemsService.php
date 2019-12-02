@@ -82,6 +82,37 @@ class ItemsService extends BaseService implements ItemsServiceContract
     }
 
     /**
+     * Удаляем записи по условиям.
+     *
+     * @param  int  $userId
+     * @param  string  $actionAlias
+     * @param  array  $conditions
+     *
+     * @throws BindingResolutionException
+     */
+    public function removeRecordsByConditions(int $userId, string $actionAlias, array $conditions): void
+    {
+        $actionsService = app()->make('InetStudio\PointsFlowPackage\Actions\Contracts\Services\Front\ItemsServiceContract');
+        $action = $actionsService->getModel()->where('alias', '=', $actionAlias)->first();
+
+        $records = $this->getModel()
+            ->where(
+                [
+                    ['user_id', '=', $userId ?? 0],
+                    ['action_id', '=', $action['id'] ?? 0],
+                ]
+            )
+            ->where(
+                $conditions
+            )
+            ->get();
+
+        foreach ($records as $record) {
+            $this->destroy($record['id']);
+        }
+    }
+
+    /**
      * Удаляем модель.
      *
      * @param  mixed  $id

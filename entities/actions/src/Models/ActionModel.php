@@ -48,6 +48,7 @@ class ActionModel extends Model implements ActionModelContract
         'alias',
         'description',
         'points',
+        'points_limit',
         'single',
     ];
 
@@ -74,6 +75,7 @@ class ActionModel extends Model implements ActionModelContract
             'name',
             'alias',
             'points',
+            'points_limit',
             'single',
         ];
     }
@@ -118,6 +120,16 @@ class ActionModel extends Model implements ActionModelContract
     public function setPointsAttribute($value): void
     {
         $this->attributes['points'] = (int) trim(strip_tags($value));
+    }
+
+    /**
+     * Сеттер атрибута points_limit.
+     *
+     * @param $value
+     */
+    public function setPointsLimitAttribute($value): void
+    {
+        $this->attributes['points_limit'] = (int) trim(strip_tags($value));
     }
 
     /**

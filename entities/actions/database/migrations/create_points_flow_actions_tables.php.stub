@@ -18,7 +18,8 @@ class CreatePointsFlowActionsTables extends Migration
             $table->string('name');
             $table->string('alias');
             $table->text('description')->nullable();
-            $table->integer('points');
+            $table->integer('points')->default(0);
+            $table->integer('points_limit')->default(0);
             $table->boolean('single')->default(true);
             $table->timestamps();
             $table->softDeletes();

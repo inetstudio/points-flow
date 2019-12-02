@@ -49,8 +49,9 @@ class ItemsService extends BaseService implements ItemsServiceContract
         }
 
         $records = $this->getActionRecords($userId, $actionAlias);
+        $pointsSum = $records->sum('points');
 
-        if ($action['single'] && ! $update) {
+        if (($action['single'] && ! $update) || ($action['points_limit'] > 0 && $pointsSum >= $action['points_limit'])) {
             if ($records->count() > 0) {
                 return null;
             }

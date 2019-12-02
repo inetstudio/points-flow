@@ -80,6 +80,12 @@
                                             ],
                                         ]) !!}
 
+                                        {!! Form::string('points_limit', $item->points_limit ?: 0, [
+                                            'label' => [
+                                                'title' => 'Лимит баллов',
+                                            ],
+                                        ]) !!}
+
                                         {!! Form::hidden('single', 0) !!}
                                         {!! Form::checks('single', $item->single, [
                                             'label' => [
