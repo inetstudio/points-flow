@@ -9,8 +9,11 @@ Route::group(
         'prefix' => 'back/points-flow-package',
     ],
     function () {
-        Route::any('points-flow-package/records/data/index', 'DataControllerContract@getIndexData')
+        Route::any('records/data/index', 'DataControllerContract@getIndexData')
             ->name('back.points-flow-package.records.data.index');
+
+        Route::get('records/export', 'ExportControllerContract@exportItems')
+            ->name('back.points-flow-package.records.export');
 
         Route::resource(
             'records', 'ResourceControllerContract',
