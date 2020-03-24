@@ -81,8 +81,6 @@ class ServiceProvider extends BaseServiceProvider
 
     /**
      * Регистрация компонентов форм.
-     *
-     * @return void
      */
     protected function registerFormComponents()
     {
