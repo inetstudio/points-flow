@@ -6,6 +6,7 @@ use OwenIt\Auditing\Auditable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use InetStudio\ACL\Users\Models\Traits\HasUser;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
 use InetStudio\AdminPanel\Models\Traits\HasJSONColumns;
 use InetStudio\PointsFlowPackage\Actions\Models\Traits\Action;
 use InetStudio\AdminPanel\Base\Models\Traits\Scopes\BuildQueryScopeTrait;
@@ -48,6 +49,8 @@ class RecordModel extends Model implements RecordModelContract
     protected $fillable = [
         'user_id',
         'action_id',
+        'recordable_type',
+        'recordable_id',
         'points',
         'additional_info'
     ];
@@ -83,6 +86,8 @@ class RecordModel extends Model implements RecordModelContract
             'id',
             'user_id',
             'action_id',
+            'recordable_type',
+            'recordable_id',
             'points',
             'additional_info',
         ];
@@ -118,6 +123,26 @@ class RecordModel extends Model implements RecordModelContract
     }
 
     /**
+     * Сеттер атрибута recordable_type.
+     *
+     * @param $value
+     */
+    public function setRecordableTypeAttribute($value)
+    {
+        $this->attributes['recordable_type'] = trim(strip_tags($value));
+    }
+
+    /**
+     * Сеттер атрибута recordable_id.
+     *
+     * @param $value
+     */
+    public function setRecordableIdAttribute($value)
+    {
+        $this->attributes['recordable_id'] = (int) trim(strip_tags($value));
+    }
+
+    /**
      * Сеттер атрибута points.
      *
      * @param $value
@@ -149,4 +174,14 @@ class RecordModel extends Model implements RecordModelContract
 
     use Action;
     use HasUser;
+
+    /**
+     * Полиморфное отношение с остальными моделями.
+     *
+     * @return MorphTo
+     */
+    public function recordable(): MorphTo
+    {
+        return $this->morphTo();
+    }
 }
